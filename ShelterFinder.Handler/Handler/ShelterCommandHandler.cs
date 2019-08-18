@@ -1,8 +1,10 @@
 ﻿using ShelterFinder.Domain.Command.Shelter;
+using ShelterFinder.Domain.Entities;
 using ShelterFinder.Domain.Interfaces.Handlers;
 using ShelterFinder.Domain.Interfaces.Infra;
 using ShelterFinder.Domain.Interfaces.Repositories.Write;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ShelterFinder.Handler.Handler
@@ -18,90 +20,87 @@ namespace ShelterFinder.Handler.Handler
             _shelterWriteRepository = shelterWriteRepository;
         }
 
-        public async Task Insert(ShelterCommand command)
+        public async Task<Dictionary<string, string>> Insert(ShelterInsertCommand command)
         {
             try
             {
-                var x = command.Validate();
-                if (!x.IsValid)
-                    return;
+                var data = command.Validate();
+                if (!data.IsValid)
+                {
+                    HandleErrors(command, data);
+                    return command.Notifications;
+                }
 
                 await Transaction(command, async () =>
                 {
-                    //var entity = new Shelter();
-                    //entity.Name = command.shelter.Name;
-                    //entity.Address = command.shelter.Address;
-                    //entity.Phone = command.shelter.Phone;
-                    //entity.Gender = command.shelter.Gender;
-                    //entity.Latitude = command.shelter.Latitude;
-                    //entity.Longitude = command.shelter.Longitude;
-                    //await _shelterWriteRepository.Insert(entity);
-
-                    await _shelterWriteRepository.Insert(command.shelter.Map());
+                    await _shelterWriteRepository.Insert(command.Map());
                 });
+
+                return command.Notifications;
             }
             catch (Exception ex)
             {
-                var a = ex.Message;
+                command.Notifications.Add("Error", ex.Message);
+                return command.Notifications;
             }
         }
 
-        public async Task Update(ShelterCommand command)
+        public async Task<Dictionary<string, string>> Update(ShelterUpdateCommand command)
         {
 
             try
             {
-                var x = command.Validate();
-                if (!x.IsValid)
-                    return;
+                var data = command.Validate();
+                if (!data.IsValid)
+                {
+                    HandleErrors(command, data);
+                    return command.Notifications;
+                }
 
                 await Transaction(command, async () =>
                 {
-                    //var entity = new Shelter();
-                    //entity.Name = command.shelter.Name;
-                    //entity.Address = command.shelter.Address;
-                    //entity.Phone = command.shelter.Phone;
-                    //entity.Gender = command.shelter.Gender;
-                    //entity.Latitude = command.shelter.Latitude;
-                    //entity.Longitude = command.shelter.Longitude;
-                    //await _shelterWriteRepository.Insert(entity);
-
-                    await _shelterWriteRepository.Update(command.shelter.Map());
+                    await _shelterWriteRepository.Update(command.Map());
                 });
+
+                return command.Notifications;
             }
             catch (Exception ex)
             {
-                var a = ex.Message;
+                command.Notifications.Add("Error", ex.Message);
+                return command.Notifications;
             }
         }
 
-        public async Task Delete(ShelterCommand command)
+        public async Task<Dictionary<string, string>> Delete(ShelterDeleteCommand command)
         {
 
             try
             {
-                var x = command.Validate();
-                if (!x.IsValid)
-                    return;
+                var data = command.Validate();
+                if (!data.IsValid)
+                {
+                    HandleErrors(command, data);
+                    return command.Notifications;
+                }
 
                 await Transaction(command, async () =>
                 {
-                    //var entity = new Shelter();
-                    //entity.Name = command.shelter.Name;
-                    //entity.Address = command.shelter.Address;
-                    //entity.Phone = command.shelter.Phone;
-                    //entity.Gender = command.shelter.Gender;
-                    //entity.Latitude = command.shelter.Latitude;
-                    //entity.Longitude = command.shelter.Longitude;
-                    //await _shelterWriteRepository.Insert(entity);
-
-                    await _shelterWriteRepository.Delete(command.shelter.Id);
+                    await _shelterWriteRepository.Delete(command.Id);
                 });
+
+                return command.Notifications;
             }
             catch (Exception ex)
             {
-                var a = ex.Message;
+                command.Notifications.Add("Error", ex.Message);
+                return command.Notifications;
             }
+        }
+
+        private static void HandleErrors(ShelterBaseCommand command, FluentValidation.Results.ValidationResult data)
+        {
+            foreach (var item in data.Errors)
+                command.Notifications.Add(item.ErrorCode, item.ErrorMessage);
         }
     }
 }

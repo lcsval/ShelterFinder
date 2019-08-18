@@ -36,25 +36,25 @@ namespace ShelterFinder.Api.Controllers
         }
 
         [HttpPost("shelter/insert")]
-        public async Task<IActionResult> Insert([FromBody]ShelterCommand command)
+        public async Task<IActionResult> Insert([FromBody]ShelterInsertCommand command)
         {
             await _handler.Insert(command);
-            return Ok(true);
+            return Ok(command.Notifications);
         }
 
-        [HttpPost("shelter/update")]
-        public async Task<IActionResult> Update([FromBody]ShelterCommand command)
+        [HttpPut("shelter/update")]
+        public async Task<IActionResult> Update([FromBody]ShelterUpdateCommand command)
         {
             await _handler.Update(command);
-            return Ok(true);
+            return Ok(command.Notifications);
+
         }
 
-        [HttpPost("shelter/delete")]
-        public async Task<IActionResult> Delete([FromBody]ShelterCommand command)
+        [HttpDelete("shelter/delete")]
+        public async Task<IActionResult> Delete([FromBody]ShelterDeleteCommand command)
         {
             await _handler.Delete(command);
-            return Ok(true);
+            return Ok(command.Notifications);
         }
-
     }
 }

@@ -1,17 +1,14 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using ShelterFinder.Domain.ViewModels;
 
 namespace ShelterFinder.Domain.Command.Shelter
 {
-    public class ShelterCommand : BaseCommand
+    public class ShelterDeleteCommand : ShelterBaseCommand
     {
-        public ShelterViewModel shelter { get; set; }
-
-        public InlineValidator<T> GetValidator<T>() where T : ShelterCommand
+        public InlineValidator<T> GetValidator<T>() where T : ShelterDeleteCommand
         {
             var validator = new InlineValidator<T>();
-
+            
             //validator.RuleFor(p => p)
             //    .Custom((entity, context) =>
             //    {
@@ -22,16 +19,12 @@ namespace ShelterFinder.Domain.Command.Shelter
             //        }
             //    });
 
-            //validator.RuleFor(r => r.Id)
-            //    .NotEmpty()
-            //    .WithMessage("Error");
-
             return validator;
         }
 
         public ValidationResult Validate()
         {
-            return GetValidator<ShelterCommand>().Validate(this);
+            return GetValidator<ShelterDeleteCommand>().Validate(this);
         }
     }
 }

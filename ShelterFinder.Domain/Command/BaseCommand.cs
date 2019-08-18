@@ -1,7 +1,14 @@
-﻿namespace ShelterFinder.Domain.Command
+﻿using System.Collections.Generic;
+
+namespace ShelterFinder.Domain.Command
 {
     public abstract class BaseCommand
     {
-        public int Id { get; set; }
+        public BaseCommand()
+        {
+            Notifications = new Dictionary<string, string>();
+        }
+
+        public Dictionary<string, string> Notifications { get; set; }
     }
 }

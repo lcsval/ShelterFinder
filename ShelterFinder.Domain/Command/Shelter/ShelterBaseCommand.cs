@@ -1,8 +1,6 @@
-﻿using ShelterFinder.Domain.Entities;
-
-namespace ShelterFinder.Domain.ViewModels
+﻿namespace ShelterFinder.Domain.Command.Shelter
 {
-    public class ShelterViewModel
+    public class ShelterBaseCommand : BaseCommand
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -12,9 +10,9 @@ namespace ShelterFinder.Domain.ViewModels
         public long Latitude { get; set; }
         public long Longitude { get; set; }
 
-        public Shelter Map()
+        public ShelterFinder.Domain.Entities.Shelter Map()
         {
-            var entity = new Shelter();
+            var entity = new ShelterFinder.Domain.Entities.Shelter();
             entity.Id = this.Id;
             entity.Name = this.Name;
             entity.Address = this.Address;

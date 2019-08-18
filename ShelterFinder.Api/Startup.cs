@@ -50,7 +50,6 @@ namespace ShelterFinder.Api
             services.AddTransient<IShelterCommandHandler, ShelterCommandHandler>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -60,11 +59,6 @@ namespace ShelterFinder.Api
 
             app.UseCors("AllowAll");
             app.UseMvc();
-
-            //app.Run(async (context) =>
-            //{
-            //    await context.Response.WriteAsync("Hello World!");
-            //});
         }
     }
 }
